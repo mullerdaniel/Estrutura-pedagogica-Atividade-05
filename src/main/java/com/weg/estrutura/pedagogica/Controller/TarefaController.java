@@ -3,10 +3,15 @@ package com.weg.estrutura.pedagogica.Controller;
 import com.weg.estrutura.pedagogica.Dto.Requisicao.TarefaRequisicaoDto;
 import com.weg.estrutura.pedagogica.Dto.Resposta.TarefaRespostaDto;
 import com.weg.estrutura.pedagogica.Service.TarefaService;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
+@RequestMapping("/tarefas")
 public class TarefaController {
 
     private final TarefaService service;
@@ -16,23 +21,24 @@ public class TarefaController {
     }
 
     @PostMapping
-    public TarefaRespostaDto salvar(@RequestBody TarefaRequisicaoDto dto) {
-        return service.salvar(dto);
+    public ResponseEntity<TarefaRespostaDto> salvar(@RequestBody TarefaRequisicaoDto dto) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(service.salvar(dto));
     }
 
     @GetMapping
-    public List<TarefaRespostaDto> listar() {
-        return service.listar();
+    public ResponseEntity<List<TarefaRespostaDto>> listar() {
+        return ResponseEntity.ok(service.listar());
     }
 
     @GetMapping("/{id}")
-    public TarefaRespostaDto buscarPorId(@PathVariable Long id) {
-        return service.buscarPorId(id);
+    public ResponseEntity<TarefaRespostaDto> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(service.buscarPorId(id));
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
         service.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 }
-
